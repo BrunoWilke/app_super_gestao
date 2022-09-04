@@ -33,7 +33,7 @@ Route::post('/login', 'LoginController@autenticar')->name('site.login');
 
 Route::middleware('autenticacao')->prefix('/app')->group(function(){
     //nav menu
-    Route::get('/cliente', 'ClienteController@index')->name('app.cliente');
+    //Route::get('/cliente', 'ClienteController@index')->name('app.cliente');
     Route::get('/fornecedor', 'FornecedorController@index')->name('app.fornecedor');
     Route::get('/home', 'HomeController@index')->name('app.home');
     Route::get('/sair', 'LoginController@sair')->name('app.sair');
@@ -51,6 +51,12 @@ Route::middleware('autenticacao')->prefix('/app')->group(function(){
 
     //produto detalhes
     Route::resource('produto-detalhe', 'ProdutoDetalheController');
+
+    Route::resource('cliente', 'ClienteController');
+
+    Route::resource('pedido', 'PedidoController');
+
+    Route::resource('pedido-produto', 'PedidoProdutoController');
 
 });
 
