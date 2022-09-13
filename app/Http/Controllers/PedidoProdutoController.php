@@ -40,17 +40,25 @@ class PedidoProdutoController extends Controller
     public function store(Request $request, Pedido $pedido)
     {
         $regras = [
-            'produto_id' => 'exists:produtos,id' 
+            'produto_id' => 'exists:produtos,id', 
+            'quantidade' => 'required|min:1'
         ];
         $feedback = [
-            'produto_id.exists' => 'O produto informado nao está cadastrado'
+            'produto_id.exists' => 'O produto informado nao está cadastrado',
+            'quantidade.required' => 'Informe uma quantidade',
+            'quantidade.min' => 'A quantidade não pode ser menor do que um'
         ];
         $request->validate($regras,$feedback);
-        echo $pedido->id. ' - '.$request->get('produto_id');
+        /*echo $pedido->id. ' - '.$request->get('produto_id');
         $pedidoProduto = new PedidoProduto;
         $pedidoProduto->pedido_id = $pedido->id;
         $pedidoProduto->produto_id = $request->get('produto_id');
-        $pedidoProduto->save();
+        $pedidoProduto->quantidade = $request->get('quantidade');
+        $pedidoProduto->save();*/
+        $pedido->produtos()->attach(
+            $request->get('produto_id'), 
+            ['quantidade' => $request->get('quantidade')]
+        );
 
         return redirect()->route('pedido-produto.create', ['pedido' => $pedido->id]);
     }
@@ -95,8 +103,14 @@ class PedidoProdutoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Pedido $pedido, Produto $produto)
     {
-        //
+        /*PedidoProduto::where([
+            'pedido_id' => $pedido->id,
+            'produto_id' => $produto->id
+            ])->delete();*/
+        $pedido->produtos()->detach($produto->id);
+        //$produto->pedidos($pedido->id)->detach(); - funcionaria igual
+        return redirect()->route('pedido-produto.create', ['pedido' => $pedido->id]);
     }
 }
