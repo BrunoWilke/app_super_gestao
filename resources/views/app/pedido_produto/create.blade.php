@@ -34,6 +34,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                {{ $pedido->produtos }}
                     @foreach($pedido->produtos as $produto)
                     <tr>
                         <td>{{$produto->id}}</td>
@@ -41,10 +42,10 @@
                         <td>{{$produto->pivot->quantidade}}</td>
                         <td>{{$produto->pivot->created_at}}</td>
                         <td>
-                            <form id="form_{{$pedido->id}}_{{$produto->id}}" action="{{ route('pedido-produto.destroy',['pedido' => $pedido->id, 'produto' => $produto->id]) }}" method="post">
+                            <form id="form_{{$produto->pivot->id}}" action="{{ route('pedido-produto.destroy',['pedidoProduto' => $produto->pivot->id,'pedido_id' => $pedido->id]) }}" method="post">
                                 @method('DELETE')
                                 @csrf    
-                                <a href="#"onclick="document.getElementById('form_{{$pedido->id}}_{{$produto->id}}').submit()">Excluir</a> 
+                                <a href="#"onclick="document.getElementById('form_{{$produto->pivot->id}}').submit()">Excluir</a> 
                             </form>
                         </td>
                     </tr>
