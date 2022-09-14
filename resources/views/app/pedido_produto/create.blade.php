@@ -34,7 +34,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                {{ $pedido->produtos }}
                     @foreach($pedido->produtos as $produto)
                     <tr>
                         <td>{{$produto->id}}</td>
